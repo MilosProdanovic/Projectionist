@@ -22,6 +22,7 @@ let upcoming = document.querySelector('#upcoming')
 let inCinema = document.querySelector('#cinema')
 let sort = document.querySelector('#sort')
 let sortResults = []; 
+let clicks = 0;
 
 //VALIDATON//
 
@@ -155,6 +156,7 @@ function runSearch(e) {
 }
 
 function getTopRated(e) {
+    clicks = 1;
     let url = ''.concat(baseURL, 'movie/top_rated?api_key=', key);
     fetch(url)
         .then(result => result.json())
@@ -212,9 +214,16 @@ function getIn(e) {
 //MAIN ITEMS//
 
 function sortItems(e){
-    sortResults.sort(function(a,b){
-    return b.vote_average - a.vote_average
-  })
+    if(clicks % 2 === 0){
+        sortResults.sort(function(a,b){
+        return b.vote_average - a.vote_average
+        })
+    }else{
+        sortResults.sort(function(a,b){
+            return  a.vote_average - b.vote_average
+        })
+    }
+  clicks += 1
   listItems(sortResults)
 }
 
@@ -228,7 +237,7 @@ function listItems(items){
             let addButton = document.createElement('button')
             let rating = document.createElement('div')
             if(items[i].poster_path === null){
-                image.src = "/img/err.png"
+                image.src = "img/err.png"
             }
             else{
             image.src = baseImageURL + poster + items[i].poster_path;
