@@ -37,7 +37,7 @@ body {
     border-radius: 20px;
     padding: 20px;
     width: 320px;
-    display:block;
+    display:none;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -123,7 +123,7 @@ nav {
 	position: fixed;
     width: 100%;
     z-index: 10;
-    display: none;
+    display: block;
 }
  
 .dropdown {
@@ -201,11 +201,11 @@ nav {
 #banner {
     width: 100%;
     height: 300px;
-    background-image: url("/img/projektor.jpg");
+    background-image: url("../img/projektor.jpg");
     background-repeat: no-repeat;
     background-size: 700px 100%;
     background-position: center;
-    display: none;
+    display: block;
 }
 
 #movie {
