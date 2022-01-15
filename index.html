@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projectionist</title>
+</head>
+<body>
+
+ <!--  HEADER -->
+  <header >
+		<nav id="header" >
+      <div class="dropdown">
+        <div id="ham">
+          <a href="#" id="hamburger">☰</a>
+        </div>
+        <div id="dropdown-content" class="dropdown-content">
+          <a href="#" id="cinema">In Cinema</a>
+          <a href="#" id="popular">Popular</a>
+          <a href="#" id="upcoming">Upcoming</a>
+          <a href="#" id="top-rated">Top Rated</a>
+        </div>
+      </div>
+			<ul id="bar">
+				<li><a href="#">+ Watchlist</a></li>
+				<li ><a id="logo" href="#"><img src="img/logo.png" alt=""></a></li>
+			</ul>
+		</nav>
+	</header>
+
+  <!--BANNER-->
+  <section id="banner">
+    <input id="movie" type="text" placeholder="Enter movie"/>
+    <img id="sort" src="img/sort.png" alt="sort">
+    <button id="movieButton"  type="text">submit</button>
+  </section>
+  <!--MAIN-->
+
+  <main>
+        <div id="container"></div>
+  </main>
+  <!--INPUT FORM-->
+  <form class="form" id="form" >
+    <div class="title">Welcome</div>
+    <div class="subtitle">Create your account!</div>
+    <div class="input-container c1">
+      <input id="firstname" class="input" type="text" placeholder="First Name"/>
+      <p id="fnameMessage" class="message">Invalid first name format!</p>
+    </div>
+    <div class="input-container c2">
+      <input id="lastname" class="input" type="text" placeholder="Last Name"/>
+      <p id="lnameMessage" class="message">Invalid second name format!</p>
+    </div>
+    <div class="input-container c2">
+      <input id="email" class="input" type="text" placeholder="Email"/>
+      <p id="emailMessage" class="message">Invalid email format!</p>
+    </div>
+    <div class="input-container c2">
+      <input id="password" class="input" type="password" placeholder="Password"/>
+      <p id="passMessage" class="message">*Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters.</p>
+    </div>
+
+    <input type="submit" id="submit" class="submit" value="Submit"/>
+  </form>
+  <script src="js/main.js"></script>
+</body>
+</html>
+
