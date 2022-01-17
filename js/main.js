@@ -1,6 +1,7 @@
 let key = "9ad839273b220803b9a6143becde4b49";
 let baseURL = 'https://api.themoviedb.org/3/';
 let poster = null;
+let poster2 = null;
 let baseImageURL = null;
 let inputs = document.querySelectorAll('.input') 
 let movieSearch = document.querySelector('#movie')
@@ -23,6 +24,7 @@ let inCinema = document.querySelector('#cinema')
 let sort = document.querySelector('#sort')
 let sortResults = []; 
 let clicks = 0;
+let movieId = 0;
 
 //VALIDATON//
 
@@ -136,6 +138,7 @@ function getConfig() {
         .then((data) => {
             baseImageURL = data.images.secure_base_url;
             poster = data.images.poster_sizes[2];
+            poster2 = data.images.poster_sizes[3]
         })
         .catch(function (err) {
             alert(err);
@@ -197,6 +200,7 @@ function getUpcoming(e) {
             alert(err);
         });
 }
+
 function getIn(e) {
     let url = ''.concat(baseURL, 'movie/now_playing?api_key=', key);
     fetch(url)
@@ -205,6 +209,32 @@ function getIn(e) {
             dropdown.classList.toggle('block')
             sortResults = data.results
             listItems(data.results)
+        })
+        .catch(function (err) {
+            alert(err);
+        });
+}
+
+function movieDetails(e) {
+    movieId = (Number(e.path[1].id))
+    let url = ''.concat(baseURL, 'movie/', movieId, '?api_key=', key);
+    fetch(url)
+        .then(result => result.json())
+        .then((data) => {
+            listDetails(data)
+        })
+        .catch(function (err) {
+            alert(err);
+        });
+}
+
+function getVideo(e) {
+    movieId = (Number(e.path[1].id))
+    let url = ''.concat(baseURL, '/movie/', movieId, '/videos?api_key=', key);
+    fetch(url)
+        .then(result => result.json())
+        .then((data) => {
+            listVideo(data)
         })
         .catch(function (err) {
             alert(err);
@@ -220,7 +250,7 @@ function sortItems(e){
         })
     }else{
         sortResults.sort(function(a,b){
-            return  a.vote_average - b.vote_average
+        return  a.vote_average - b.vote_average
         })
     }
   clicks += 1
@@ -244,15 +274,98 @@ function listItems(items){
             }
             title.textContent = items[i].title
             title.style.fontSize = '20px'
+            title.classList.add('movieTitle')
             addButton.classList = 'addMovies'
             addButton.textContent = '+'
             rating.textContent = "rating: " + items[i].vote_average;
+            rating.classList.add('movieRating')
             card.classList = 'card';
+            card.setAttribute('id', items[i].id)
             card.append (addButton,image, title,rating)
             container.append(card)
             sort.classList.add('block')
             button.disabled = true
+            image.addEventListener('click', movieDetails)
+            title.addEventListener('click', movieDetails)
+            image.addEventListener('click', getVideo)
+            title.addEventListener('click', getVideo)
         }
+}
+
+function listDetails(details){
+    container.innerHTML = ""
+    banner.classList = ('none')
+    let card = document.createElement('div');
+    let image = document.createElement('img');
+    let title = document.createElement('div');
+    let rating = document.createElement('div');
+    let overview = document.createElement('div');
+    let date = document.createElement('div');
+    let time = document.createElement('div');
+    let countriesTag = document.createElement('span');
+    countriesTag.textContent = "Countries: "
+    let companiesTag = document.createElement('span');
+    companiesTag.textContent = "Studios: "
+    let companiesDiv = document.createElement('div')
+    let countriesDiv = document.createElement('div')
+    let addButton = document.createElement('button')
+    let ham = document.querySelector('.dropdown')
+    ham.classList.add('none')
+
+    image.src = baseImageURL + poster2 + details.poster_path;
+    title.textContent = details.title;
+    title.classList.add('detailTitle')
+    rating.textContent = 'Rating: ' + details.vote_average;
+    overview.textContent = 'Movie Info: ' + details.overview;
+    date.textContent = 'Release Date: ' + details.release_date
+    time.textContent = 'Runtime: ' + details.runtime + " min."
+    addButton.classList = 'addMovies'
+    addButton.textContent = '+'
+    card.classList.add('cardDetails')
+    card.setAttribute('id', details.id)
+    
+    card.append(addButton, image)
+
+    details.genres.map((tag)=>{
+        let genres = document.createElement('span')
+        let genresTag = tag.name
+        genres.textContent = genresTag
+        genres.classList.add('genres')
+        card.append(genres)
+    })
+
+    companiesDiv.append(companiesTag)
+    card.append(title, rating, overview, date, time)
+
+    details.production_companies.map((tag)=>{
+        let companies = document.createElement('span')
+        let companiesTag = tag.name
+        companies.textContent = " " + companiesTag + ",";
+        companiesDiv.append(companies)
+    })
+
+    companiesDiv.lastChild.textContent = companiesDiv.lastChild.textContent.slice(0, companiesDiv.lastChild.textContent.length -1)
+    countriesDiv.append(countriesTag)
+    card.append(companiesDiv)
+
+    details.production_countries.map((tag)=>{
+        let countries = document.createElement('span')
+        let countriesTag = tag.name
+        countries.textContent = " " + countriesTag + ",";
+        countriesDiv.append(countries)
+    })
+
+    countriesDiv.lastChild.textContent = countriesDiv.lastChild.textContent.slice(0, countriesDiv.lastChild.textContent.length -1)
+    card.append(countriesDiv)
+    container.append(card)
+}
+
+function listVideo(video){
+    let trailer = document.createElement('iframe')
+    console.log(video.results[0].key )
+    trailer.src = "https://www.youtube.com/embed/" + video.results[0].key 
+
+    container.append(trailer)
 }
 
 document.addEventListener('DOMContentLoaded', getConfig);
@@ -263,3 +376,4 @@ popular.addEventListener('click', getPopular)
 upcoming.addEventListener('click', getUpcoming)
 inCinema.addEventListener('click', getIn)
 sort.addEventListener('click', sortItems)
+
