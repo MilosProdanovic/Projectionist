@@ -260,6 +260,15 @@ function sortItems(e){
 function listItems(items){
     container.innerHTML = "";
     movieSearch.value = "";
+
+    let noMovie = document.createElement('div')
+    noMovie.textContent = "No movies"
+    noMovie.classList.add('card')
+    noMovie.style.color = 'white'
+    if(items.length === 0){
+            container.append(noMovie)
+        }
+
     for(let i = 0; i < items.length; i++){
             let image = document.createElement('img');
             let title = document.createElement('div')
@@ -306,8 +315,11 @@ function listDetails(details){
     countriesTag.textContent = "Countries: "
     let companiesTag = document.createElement('span');
     companiesTag.textContent = "Studios: "
+    let languagesTag = document.createElement('span');
+    languagesTag.textContent = "Languages: "
     let companiesDiv = document.createElement('div')
     let countriesDiv = document.createElement('div')
+    let languagesDiv = document.createElement('div')
     let addButton = document.createElement('button')
     let ham = document.querySelector('.dropdown')
     ham.classList.add('none')
@@ -334,37 +346,46 @@ function listDetails(details){
         card.append(genres)
     })
 
-    companiesDiv.append(companiesTag)
     card.append(title, rating, overview, date, time)
+    languagesDiv.append(languagesTag)
+
+    details.spoken_languages.map((tag)=>{
+        let languages = document.createElement('span')
+        let languagesTagName = tag.english_name
+        languages.textContent = " " + languagesTagName + ",";
+        languagesDiv.append(languages)
+    })
+
+    languagesDiv.lastChild.textContent = languagesDiv.lastChild.textContent.slice(0, languagesDiv.lastChild.textContent.length -1)
+    card.append(languagesDiv)
+    companiesDiv.append(companiesTag)
 
     details.production_companies.map((tag)=>{
         let companies = document.createElement('span')
-        let companiesTag = tag.name
-        companies.textContent = " " + companiesTag + ",";
+        let companiesTagName = tag.name
+        companies.textContent = " " + companiesTagName + ",";
         companiesDiv.append(companies)
     })
 
     companiesDiv.lastChild.textContent = companiesDiv.lastChild.textContent.slice(0, companiesDiv.lastChild.textContent.length -1)
-    countriesDiv.append(countriesTag)
     card.append(companiesDiv)
+    countriesDiv.append(countriesTag)
 
     details.production_countries.map((tag)=>{
         let countries = document.createElement('span')
-        let countriesTag = tag.name
-        countries.textContent = " " + countriesTag + ",";
+        let countriesTagName = tag.name
+        countries.textContent = " " + countriesTagName + ",";
         countriesDiv.append(countries)
     })
-
     countriesDiv.lastChild.textContent = countriesDiv.lastChild.textContent.slice(0, countriesDiv.lastChild.textContent.length -1)
     card.append(countriesDiv)
     container.append(card)
+    console.log(countriesTag)
 }
 
 function listVideo(video){
     let trailer = document.createElement('iframe')
-    console.log(video.results[0].key )
-    trailer.src = "https://www.youtube.com/embed/" + video.results[0].key 
-
+    trailer.src = "https://www.youtube.com/embed/" + video.results[0].key
     container.append(trailer)
 }
 
