@@ -22,6 +22,8 @@ let popular = document.querySelector('#popular')
 let upcoming = document.querySelector('#upcoming')
 let inCinema = document.querySelector('#cinema')
 let sort = document.querySelector('#sort')
+let ham = document.querySelector('#hamburger')
+let back = document.querySelector('#back')
 let sortResults = []; 
 let clicks = 0;
 let movieId = 0;
@@ -111,7 +113,7 @@ submitForm.addEventListener('click', subForm)
 //HEADER//
 
 function dropMenu(){
-    let hamburger = document.querySelector('#ham')
+    let hamburger = document.querySelector('#hamburger')
     hamburger.addEventListener('click',((e)=> {
         dropdown.classList.toggle('block')
     })
@@ -141,7 +143,7 @@ function getConfig() {
             poster2 = data.images.poster_sizes[3]
         })
         .catch(function (err) {
-            alert(err);
+            console.log(err);
         });
 }
   
@@ -154,7 +156,7 @@ function runSearch(e) {
             listItems(data.results);
         })
         .catch(function (err) {
-            alert(err);
+            console.log(err);
         });
 }
 
@@ -169,7 +171,7 @@ function getTopRated(e) {
             listItems(data.results)
         })
         .catch(function (err) {
-            alert(err);
+            console.log(err);
         });
 }
 
@@ -183,7 +185,7 @@ function getPopular(e) {
             listItems(data.results)
         })
         .catch(function (err) {
-            alert(err);
+            console.log(err);
         });
 }
 
@@ -197,7 +199,7 @@ function getUpcoming(e) {
             listItems(data.results)
         })
         .catch(function (err) {
-            alert(err);
+            console.log(err);
         });
 }
 
@@ -211,11 +213,12 @@ function getIn(e) {
             listItems(data.results)
         })
         .catch(function (err) {
-            alert(err);
+            console.log(err);
         });
 }
 
 function movieDetails(e) {
+    console.log(e)
     movieId = (Number(e.path[1].id))
     let url = ''.concat(baseURL, 'movie/', movieId, '?api_key=', key);
     fetch(url)
@@ -224,7 +227,7 @@ function movieDetails(e) {
             listDetails(data)
         })
         .catch(function (err) {
-            alert(err);
+            console.log(err);
         });
 }
 
@@ -237,7 +240,7 @@ function getVideo(e) {
             listVideo(data)
         })
         .catch(function (err) {
-            alert(err);
+            console.log(err);
         });
 }
 
@@ -258,6 +261,7 @@ function sortItems(e){
 }
 
 function listItems(items){
+    sessionStorage.setItem("items", JSON.stringify(items))
     container.innerHTML = "";
     movieSearch.value = "";
 
@@ -321,8 +325,10 @@ function listDetails(details){
     let countriesDiv = document.createElement('div')
     let languagesDiv = document.createElement('div')
     let addButton = document.createElement('button')
-    let ham = document.querySelector('.dropdown')
     ham.classList.add('none')
+    back.classList.remove('none')
+
+    back.addEventListener('click', backFun)
 
     image.src = baseImageURL + poster2 + details.poster_path;
     title.textContent = details.title;
@@ -380,13 +386,21 @@ function listDetails(details){
     countriesDiv.lastChild.textContent = countriesDiv.lastChild.textContent.slice(0, countriesDiv.lastChild.textContent.length -1)
     card.append(countriesDiv)
     container.append(card)
-    console.log(countriesTag)
 }
 
 function listVideo(video){
+    console.log(video)
     let trailer = document.createElement('iframe')
     trailer.src = "https://www.youtube.com/embed/" + video.results[0].key
     container.append(trailer)
+}
+
+function backFun(){
+    let backItems = JSON.parse(sessionStorage.getItem('items'))
+    banner.classList.remove('none')
+    ham.classList.remove('none')
+    back.classList.add('none')
+    listItems(backItems)
 }
 
 document.addEventListener('DOMContentLoaded', getConfig);
