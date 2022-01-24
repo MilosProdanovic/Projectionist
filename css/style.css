@@ -30,6 +30,14 @@ body {
     display: flex !important
 }
 
+.disabled {
+    pointer-events: none;
+} 
+
+.active {
+    opacity: 100% !important
+}
+
 /* FORM */
 
 .form {
@@ -89,6 +97,7 @@ body {
 .input:focus {
     border: 1px solid;  
 }
+
 .message {
     color: red;
     font-size: 10px;
@@ -153,7 +162,6 @@ nav {
     padding: 15px;
     cursor: pointer;
 }
-
 
 #ham a {
     text-decoration: none;
@@ -258,6 +266,9 @@ nav {
 }
 
 /*MAIN*/
+#stars{
+    display: none;
+}
 
 #container {
     display: flex;
@@ -270,6 +281,7 @@ nav {
     margin: 10px;
     width: 250px;
     text-align: center;
+    height: 405px;
 }
 
 .card img {
@@ -297,10 +309,33 @@ nav {
     opacity: 0.8;
 }
 
+.movieRating:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#stars a {
+    cursor: pointer;
+    opacity: 50%;
+}
+
+#stars:hover a {
+    opacity: 100%;
+}
+
+#stars a:hover {
+    opacity: 100%;
+}
+
+#stars a:hover ~ a {
+    opacity: 50%;
+  }
+
 .addMovies:hover {
     background-color: #585c80;
     transition: .9s;
 }
+
 .genres {
     color: white;
     border: 2px solid white;
@@ -311,8 +346,8 @@ nav {
 }
 
 .cardDetails {
-    padding: 20px 10px;
-    margin: 10px;
+    padding: 20px 10px 20px 0;
+    margin: 10px 0;
     width: 400px;
 }
 

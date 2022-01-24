@@ -23,7 +23,9 @@ let upcoming = document.querySelector('#upcoming')
 let inCinema = document.querySelector('#cinema')
 let sort = document.querySelector('#sort')
 let ham = document.querySelector('#hamburger')
+let dropList = document.querySelector('#dropdown')
 let back = document.querySelector('#back')
+
 let sortResults = []; 
 let clicks = 0;
 let movieId = 0;
@@ -113,11 +115,16 @@ submitForm.addEventListener('click', subForm)
 //HEADER//
 
 function dropMenu(){
-    let hamburger = document.querySelector('#hamburger')
-    hamburger.addEventListener('click',((e)=> {
+    ham.addEventListener('click',((e)=> {
         dropdown.classList.toggle('block')
     })
-)}
+)
+    dropdown.addEventListener('mouseleave',function(){
+        setTimeout(function(){
+        dropdown.classList.remove('block')
+        },300)
+    })
+}
 
 dropMenu()
 
@@ -218,7 +225,6 @@ function getIn(e) {
 }
 
 function movieDetails(e) {
-    console.log(e)
     movieId = (Number(e.path[1].id))
     let url = ''.concat(baseURL, 'movie/', movieId, '?api_key=', key);
     fetch(url)
@@ -264,7 +270,7 @@ function listItems(items){
     sessionStorage.setItem("items", JSON.stringify(items))
     container.innerHTML = "";
     movieSearch.value = "";
-
+    
     let noMovie = document.createElement('div')
     noMovie.textContent = "No movies"
     noMovie.classList.add('card')
@@ -272,8 +278,15 @@ function listItems(items){
     if(items.length === 0){
             container.append(noMovie)
         }
-
-    for(let i = 0; i < items.length; i++){
+        for(let i = 0; i < items.length; i++){
+            let stars = document.createElement('div')
+            stars.id = 'stars'
+            for(let i = 1; i <= 10; i++){
+                let star = document.createElement('a');
+                star.innerText = '⭐'
+                star.id = i;
+                stars.append(star) 
+            }
             let image = document.createElement('img');
             let title = document.createElement('div')
             let card = document.createElement('div');
@@ -294,7 +307,7 @@ function listItems(items){
             rating.classList.add('movieRating')
             card.classList = 'card';
             card.setAttribute('id', items[i].id)
-            card.append (addButton,image, title,rating)
+            card.append (addButton,image, title,rating,stars)
             container.append(card)
             sort.classList.add('block')
             button.disabled = true
@@ -302,9 +315,48 @@ function listItems(items){
             title.addEventListener('click', movieDetails)
             image.addEventListener('click', getVideo)
             title.addEventListener('click', getVideo)
+            rating.addEventListener('click', ((e)=>{
+                stars.classList.toggle('flex')
+            }))
+            stars.addEventListener('mouseleave', ((e)=>{
+                stars.classList.remove('flex')
+            })) 
+            starRating(card)
         }
 }
 
+function starRating(card){
+        let cardsList = card.childNodes
+        cardsList[cardsList.length-1].childNodes.forEach((singleStar, clickedIndex) => {
+            singleStar.addEventListener('click', (e)=>{ 
+                fetch(baseURL + 'movie/' +  e.path[2].id + '/rating?api_key=' + key,{                   
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: {
+                        'value': e.target.id
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {                 
+                        console.log(data)
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+            e.path[1].classList.toggle('disabled');
+            cardsList[cardsList.length -1].childNodes.forEach((otherStar, otherIndex) => {
+                    if(otherIndex <= clickedIndex){
+                        otherStar.classList.add('active')
+                    }
+            })
+        })
+    })
+}
+
+    
+        
 function listDetails(details){
     container.innerHTML = ""
     banner.classList = ('none')
@@ -389,7 +441,6 @@ function listDetails(details){
 }
 
 function listVideo(video){
-    console.log(video)
     let trailer = document.createElement('iframe')
     trailer.src = "https://www.youtube.com/embed/" + video.results[0].key
     container.append(trailer)
@@ -406,6 +457,11 @@ function backFun(){
 document.addEventListener('DOMContentLoaded', getConfig);
 banner.addEventListener('mouseover', check)
 button.addEventListener('click',runSearch)
+banner.addEventListener('keyup', ((e)=>{
+    if(e.key === 'Enter'){
+       runSearch()
+    }
+}))
 topRated.addEventListener('click', getTopRated)
 popular.addEventListener('click', getPopular)
 upcoming.addEventListener('click', getUpcoming)
