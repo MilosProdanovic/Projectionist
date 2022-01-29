@@ -204,6 +204,13 @@ nav {
 	display: block;
 }
 
+#subtitle {
+    padding-top: 80px;
+    color: #cdceb2;
+	font-size: 30px;
+    text-align: center;
+}
+
 /*BANNER SEARCH*/
 
 #banner {
@@ -266,6 +273,7 @@ nav {
 }
 
 /*MAIN*/
+
 #stars{
     display: none;
 }
@@ -274,6 +282,7 @@ nav {
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
+    padding-top: 50px;
 }
 
 .card {
@@ -309,9 +318,30 @@ nav {
     opacity: 0.8;
 }
 
+.addMovies:hover {
+    background-color: #585c80;
+    transition: .9s;
+}
+
+.removeMovies{
+    width: 20px;
+    position: absolute;
+    cursor: pointer;
+    font-size: larger;
+    background-color: #df0808;
+    border: none;
+    opacity: 0.8;
+}
+
+.removeMovies:hover {
+    background-color: #d63939;
+    transition: .9s;
+}
+
 .movieRating:hover {
     cursor: pointer;
     text-decoration: underline;
+    text-align: center;
 }
 
 #stars a {
@@ -330,11 +360,6 @@ nav {
 #stars a:hover ~ a {
     opacity: 50%;
   }
-
-.addMovies:hover {
-    background-color: #585c80;
-    transition: .9s;
-}
 
 .genres {
     color: white;
@@ -356,19 +381,14 @@ nav {
 }
 
 .cardDetails button {
-    top: 80px;
+    top: 130px;
     width: 40px;
     height: 50px;
     font-size: 30px;
 }
 
-
 .cardDetails img {
     padding: 50px 0;
-}
-
-.detailTitle {
-    font-size: 45px;
 }
 
 .cardDetails span {

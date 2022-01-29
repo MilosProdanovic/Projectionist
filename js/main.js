@@ -1,5 +1,6 @@
 let key = "9ad839273b220803b9a6143becde4b49";
 let baseURL = 'https://api.themoviedb.org/3/';
+let token = '';
 let poster = null;
 let poster2 = null;
 let baseImageURL = null;
@@ -25,6 +26,7 @@ let sort = document.querySelector('#sort')
 let ham = document.querySelector('#hamburger')
 let dropList = document.querySelector('#dropdown')
 let back = document.querySelector('#back')
+let watchlist = document.querySelector('#watchlist')
 
 let sortResults = []; 
 let clicks = 0;
@@ -161,6 +163,7 @@ function runSearch(e) {
         .then((data) => {
             sortResults = data.results
             listItems(data.results);
+            sessionStorage.setItem("items", JSON.stringify(data.results))
         })
         .catch(function (err) {
             console.log(err);
@@ -176,6 +179,7 @@ function getTopRated(e) {
             dropdown.classList.toggle('block')
             sortResults = data.results
             listItems(data.results)
+            sessionStorage.setItem("items", JSON.stringify(data.results))
         })
         .catch(function (err) {
             console.log(err);
@@ -190,6 +194,7 @@ function getPopular(e) {
             dropdown.classList.toggle('block')
             sortResults = data.results
             listItems(data.results)
+            sessionStorage.setItem("items", JSON.stringify(data.results))
         })
         .catch(function (err) {
             console.log(err);
@@ -204,6 +209,7 @@ function getUpcoming(e) {
             dropdown.classList.toggle('block')
             sortResults = data.results
             listItems(data.results)
+            sessionStorage.setItem("items", JSON.stringify(data.results))
         })
         .catch(function (err) {
             console.log(err);
@@ -218,6 +224,7 @@ function getIn(e) {
             dropdown.classList.toggle('block')
             sortResults = data.results
             listItems(data.results)
+            sessionStorage.setItem("items", JSON.stringify(data.results))
         })
         .catch(function (err) {
             console.log(err);
@@ -239,12 +246,24 @@ function movieDetails(e) {
 
 function getVideo(e) {
     movieId = (Number(e.path[1].id))
-    let url = ''.concat(baseURL, '/movie/', movieId, '/videos?api_key=', key);
+    let url = ''.concat(baseURL, 'movie/', movieId, '/videos?api_key=', key);
     fetch(url)
         .then(result => result.json())
         .then((data) => {
             listVideo(data)
         })
+        .catch(function (err) {
+            console.log(err);
+        });
+}
+
+function getToken(e){
+    let url = ''.concat(baseURL + 'authentication/guest_session/new?api_key=' + key)
+    fetch(url)
+        .then(result => result.json())
+        .then((data => 
+            token = data.guest_session_id)
+        )
         .catch(function (err) {
             console.log(err);
         });
@@ -257,20 +276,33 @@ function sortItems(e){
         sortResults.sort(function(a,b){
         return b.vote_average - a.vote_average
         })
-    }else{
+    }
+    else{
         sortResults.sort(function(a,b){
         return  a.vote_average - b.vote_average
         })
     }
   clicks += 1
+  sessionStorage.setItem("items", JSON.stringify(sortResults))
   listItems(sortResults)
 }
 
 function listItems(items){
-    sessionStorage.setItem("items", JSON.stringify(items))
+    let values = [];
+    let keys = Object.keys(localStorage)
+    for(let i = 0; i < keys.length; i++){
+        values.push(JSON.parse(localStorage.getItem(keys[i])))
+    }
+    let watchlistId = []
+    for(let i = 0; i < items.length; i++){
+        for (let j = 0; j < values.length; j++){
+            if(items[i].id === values[j].id){
+                watchlistId.push(items[i].id)
+            }
+        }
+   }
     container.innerHTML = "";
     movieSearch.value = "";
-    
     let noMovie = document.createElement('div')
     noMovie.textContent = "No movies"
     noMovie.classList.add('card')
@@ -308,6 +340,22 @@ function listItems(items){
             card.classList = 'card';
             card.setAttribute('id', items[i].id)
             card.append (addButton,image, title,rating,stars)
+            addButton.addEventListener('click', ((e)=>{
+                addButton.classList.add('removeMovies')
+                localStorage.setItem(card.id, JSON.stringify(items[i]))
+                listItems(items)
+            })) 
+            watchlistId.map((a)=>{
+                if(a === Number(card.id)){
+                    addButton.textContent = "x"
+                    addButton.classList.add('removeMovies')
+                    addButton.addEventListener('click', ((e)=>{
+                        localStorage.removeItem(card.id);
+                        addButton.classList.remove('removeMovies')
+                        listItems(items)
+                    })
+                )}
+            })
             container.append(card)
             sort.classList.add('block')
             button.disabled = true
@@ -316,27 +364,48 @@ function listItems(items){
             image.addEventListener('click', getVideo)
             title.addEventListener('click', getVideo)
             rating.addEventListener('click', ((e)=>{
-                stars.classList.toggle('flex')
+                stars.classList.toggle('block')
             }))
             stars.addEventListener('mouseleave', ((e)=>{
                 stars.classList.remove('flex')
-            })) 
+            }))
             starRating(card)
         }
 }
 
-function starRating(card){
+function getWatchList(){
+    ham.classList.add('none')
+    back.classList.remove('none')
+    banner.classList = ('none')
+    let values = [];
+    let keys = Object.keys(localStorage)
+    for(let i = 0; i < keys.length; i++){
+        values.push(JSON.parse(localStorage.getItem(keys[i])))
+    }
+    listItems(values)
+}
+
+let previousId = []
+
+function starRating(card){  
         let cardsList = card.childNodes
-        cardsList[cardsList.length-1].childNodes.forEach((singleStar, clickedIndex) => {
+        cardsList[cardsList.length -1].childNodes.forEach((singleStar, clickedIndex) => {
             singleStar.addEventListener('click', (e)=>{ 
-                fetch(baseURL + 'movie/' +  e.path[2].id + '/rating?api_key=' + key,{                   
+                let rateId = e.path[2].id
+                for(let i = 0; i < previousId.length; i++){
+                    if(rateId === (previousId[i])){
+                    e.path[1].innerHTML = "You already rated!"
+                    return false
+                    }
+                }
+                let url = ''.concat(baseURL + 'movie/' +  e.path[2].id + '/rating?api_key=' + key + '&guest_session_id=' + token)
+                fetch(url,{                   
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json;charset=utf-8'
                     },
-                    body: {
-                        'value': e.target.id
-                        }
+                    body: JSON.stringify({value: e.target.id})
+    
                     })
                     .then(response => response.json())
                     .then(data => {                 
@@ -349,17 +418,25 @@ function starRating(card){
             cardsList[cardsList.length -1].childNodes.forEach((otherStar, otherIndex) => {
                     if(otherIndex <= clickedIndex){
                         otherStar.classList.add('active')
-                    }
+                    }     
             })
+    previousId.push(rateId) 
         })
     })
 }
-
-    
-        
+      
 function listDetails(details){
     container.innerHTML = ""
     banner.classList = ('none')
+    let values = [];
+    let watchlistId = []
+    let keys = Object.keys(localStorage)
+    for(let i = 0; i < keys.length; i++){
+        values.push(JSON.parse(localStorage.getItem(keys[i])))
+    }
+    values.map((a)=>{
+        watchlistId.push(a.id)
+    })
     let card = document.createElement('div');
     let image = document.createElement('img');
     let title = document.createElement('div');
@@ -380,8 +457,6 @@ function listDetails(details){
     ham.classList.add('none')
     back.classList.remove('none')
 
-    back.addEventListener('click', backFun)
-
     image.src = baseImageURL + poster2 + details.poster_path;
     title.textContent = details.title;
     title.classList.add('detailTitle')
@@ -391,6 +466,13 @@ function listDetails(details){
     time.textContent = 'Runtime: ' + details.runtime + " min."
     addButton.classList = 'addMovies'
     addButton.textContent = '+'
+    addButton.addEventListener('click', ((e)=>{
+        localStorage.setItem(card.id, JSON.stringify(details))
+        addButton.classList.add('removeMovies')
+        listDetails(details)
+    }))
+    addButton.addEventListener('click',getVideo)
+
     card.classList.add('cardDetails')
     card.setAttribute('id', details.id)
     
@@ -437,7 +519,20 @@ function listDetails(details){
     })
     countriesDiv.lastChild.textContent = countriesDiv.lastChild.textContent.slice(0, countriesDiv.lastChild.textContent.length -1)
     card.append(countriesDiv)
+    
     container.append(card)
+    watchlistId.map((a)=>{
+        if(a === details.id){
+            addButton.textContent = "x"
+            addButton.classList.add('removeMovies')
+            addButton.addEventListener('click',getVideo)
+            addButton.addEventListener('click', ((e)=>{
+                localStorage.removeItem(details.id);
+                addButton.classList.add('addMovies')
+                listDetails(details)
+            })
+        )}
+    })
 }
 
 function listVideo(video){
@@ -454,7 +549,10 @@ function backFun(){
     listItems(backItems)
 }
 
+//EVENT LISTENERS//
+
 document.addEventListener('DOMContentLoaded', getConfig);
+document.addEventListener('DOMContentLoaded', getToken)
 banner.addEventListener('mouseover', check)
 button.addEventListener('click',runSearch)
 banner.addEventListener('keyup', ((e)=>{
@@ -467,4 +565,6 @@ popular.addEventListener('click', getPopular)
 upcoming.addEventListener('click', getUpcoming)
 inCinema.addEventListener('click', getIn)
 sort.addEventListener('click', sortItems)
+watchlist.addEventListener('click', getWatchList)
+back.addEventListener('click', backFun)
 
