@@ -549,6 +549,7 @@ function backFun(){
     listItems(backItems)
 }
 
+
 //EVENT LISTENERS//
 
 document.addEventListener('DOMContentLoaded', getConfig);

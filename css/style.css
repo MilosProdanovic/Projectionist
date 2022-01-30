@@ -139,6 +139,11 @@ nav {
     position: relative;
     display: inline-block;
 }
+
+.dropdown:hover{
+    background-color: #15172b;
+    transition: .9s;
+}
   
 .dropdown-content {
     display: none;
@@ -246,7 +251,7 @@ nav {
     background-color: #eee;
     position: absolute;
     left: 50%;
-    top: 32%;
+    top: 34%;
     transform: translate(-50%, -50%);
     opacity: 0.9;
     cursor: pointer;
@@ -273,6 +278,30 @@ nav {
 }
 
 /*MAIN*/
+
+#loader {
+    display: flex;
+    border: 16px solid #cdceb2;
+    border-top: 16px solid #303245;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 2s linear infinite;
+    margin:auto;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    position:fixed;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg);
+    }
+    100% { transform: rotate(360deg);
+    }
+}
 
 #stars{
     display: none;
@@ -403,3 +432,17 @@ iframe {
     margin: 0 10px;
 }
 
+@media only screen and (max-width: 700px) {
+    #banner{
+        background-image: none;
+    }
+    #movie{
+        width: 90%
+    }
+}
+
+@media only screen and (max-width: 600px){
+    #ham span{
+        display: none;
+    }
+}
