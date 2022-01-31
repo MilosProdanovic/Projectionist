@@ -536,8 +536,10 @@ function listDetails(details){
 }
 
 function listVideo(video){
+
     let trailer = document.createElement('iframe')
     trailer.src = "https://www.youtube.com/embed/" + video.results[0].key
+    console.log(trailer.src)
     container.append(trailer)
 }
 
@@ -546,6 +548,10 @@ function backFun(){
     banner.classList.remove('none')
     ham.classList.remove('none')
     back.classList.add('none')
+    if(backItems === null){
+        container.innerHTML = ""
+        return false
+    }
     listItems(backItems)
 }
 
@@ -554,6 +560,9 @@ function backFun(){
 
 document.addEventListener('DOMContentLoaded', getConfig);
 document.addEventListener('DOMContentLoaded', getToken)
+document.addEventListener('DOMContentLoaded', ((e)=>{
+    sessionStorage.removeItem('items')
+}))
 banner.addEventListener('mouseover', check)
 button.addEventListener('click',runSearch)
 banner.addEventListener('keyup', ((e)=>{
@@ -568,4 +577,3 @@ inCinema.addEventListener('click', getIn)
 sort.addEventListener('click', sortItems)
 watchlist.addEventListener('click', getWatchList)
 back.addEventListener('click', backFun)
-
