@@ -203,8 +203,19 @@ nav {
 	text-decoration: none;
 	color: #cdceb2;
 	font-size: 18px;
-	padding: 16.5px;
+	padding: 16.5px 0;
 	display: block;
+}
+
+#movieNumber {
+    padding-top: 5px;
+	color: #cdceb2;
+    width: 10px; 
+    font-size: 13px;
+}
+
+#movieNumber:hover {
+    cursor: unset;
 }
 
 #logo img {

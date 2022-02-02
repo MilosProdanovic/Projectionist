@@ -343,6 +343,7 @@ function listItems(items){
             addButton.addEventListener('click', ((e)=>{
                 addButton.classList.add('removeMovies')
                 localStorage.setItem(card.id, JSON.stringify(items[i]))
+                watchlistNumber()
                 listItems(items)
             })) 
             watchlistId.map((a)=>{
@@ -352,6 +353,7 @@ function listItems(items){
                     addButton.addEventListener('click', ((e)=>{
                         localStorage.removeItem(card.id);
                         addButton.classList.remove('removeMovies')
+                        watchlistNumber()
                         listItems(items)
                     })
                 )}
@@ -531,6 +533,7 @@ function listDetails(details){
             addButton.addEventListener('click', ((e)=>{
                 localStorage.removeItem(details.id);
                 addButton.classList.add('addMovies')
+                watchlistNumber()
                 listDetails(details)
             })
         )}
@@ -538,11 +541,10 @@ function listDetails(details){
 }
 
 function listVideo(video){
-
     let trailer = document.createElement('iframe')
     trailer.src = "https://www.youtube.com/embed/" + video.results[0].key
-    console.log(trailer.src)
     container.append(trailer)
+    watchlistNumber()
 }
 
 function backFun(){
@@ -557,6 +559,16 @@ function backFun(){
     listItems(backItems)
 }
 
+function watchlistNumber(){
+    let num = document.querySelector('#movieNumber')
+    
+    num.innerText = localStorage.length
+    if(localStorage.length === 0){
+        num.innerText = ""
+    }
+}
+
+watchlistNumber()
 
 //EVENT LISTENERS//
 
@@ -579,6 +591,3 @@ inCinema.addEventListener('click', getIn)
 sort.addEventListener('click', sortItems)
 watchlist.addEventListener('click', getWatchList)
 back.addEventListener('click', backFun)
-
-
-
