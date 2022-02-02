@@ -385,7 +385,8 @@ function getWatchList(){
     listItems(values)
 }
 
-let previousId = []
+document.cookie = []
+let previousId = document.cookie.split(',')
 
 function starRating(card){  
         let cardsList = card.childNodes
@@ -420,7 +421,8 @@ function starRating(card){
                         otherStar.classList.add('active')
                     }     
             })
-    previousId.push(rateId) 
+            previousId.push(rateId)
+            document.cookie = previousId
         })
     })
 }
@@ -577,3 +579,6 @@ inCinema.addEventListener('click', getIn)
 sort.addEventListener('click', sortItems)
 watchlist.addEventListener('click', getWatchList)
 back.addEventListener('click', backFun)
+
+
+
