@@ -299,7 +299,7 @@ nav {
 /*LOADER*/
 
 #loader {
-    display: flex;
+    display: block;
     border: 16px solid #cdceb2;
     border-top: 16px solid #303245;
     border-radius: 50%;
@@ -309,7 +309,7 @@ nav {
     margin:auto;
     left:0;
     right:0;
-    top:0;
+    top:80px;
     bottom:0;
     position:fixed;
     transform: translate(-50%, -50%);

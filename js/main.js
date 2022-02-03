@@ -27,6 +27,7 @@ let ham = document.querySelector('#hamburger')
 let dropList = document.querySelector('#dropdown')
 let back = document.querySelector('#back')
 let watchlist = document.querySelector('#watchlist')
+let loader = document.querySelector('#loader')
 
 let sortResults = []; 
 let clicks = 0;
@@ -138,6 +139,12 @@ function check(){
     }
 }
 
+function showLoader(){
+    container.innerHTML = ""
+    loader.classList.remove('none')
+}
+
+
 //FETCH//
 
 function getConfig() {
@@ -157,12 +164,16 @@ function getConfig() {
 }
   
 function runSearch(e) {
+    showLoader()
     let url = ''.concat(baseURL, 'search/movie?api_key=', key, '&query=', movieSearch.value);
     fetch(url)
         .then(result => result.json())
         .then((data) => {
             sortResults = data.results
-            listItems(data.results);
+            setTimeout(()=>{
+                loader.classList.add('none')
+                listItems(data.results);
+            },1000)
             sessionStorage.setItem("items", JSON.stringify(data.results))
         })
         .catch(function (err) {
@@ -171,6 +182,7 @@ function runSearch(e) {
 }
 
 function getTopRated(e) {
+    showLoader()
     clicks = 1;
     let url = ''.concat(baseURL, 'movie/top_rated?api_key=', key);
     fetch(url)
@@ -178,7 +190,10 @@ function getTopRated(e) {
         .then((data) => {
             dropdown.classList.toggle('block')
             sortResults = data.results
-            listItems(data.results)
+            setTimeout(()=>{
+                loader.classList.add('none')
+                listItems(data.results);
+            },1000)
             sessionStorage.setItem("items", JSON.stringify(data.results))
         })
         .catch(function (err) {
@@ -187,13 +202,17 @@ function getTopRated(e) {
 }
 
 function getPopular(e) {
+    showLoader()
     let url = ''.concat(baseURL, 'movie/popular?api_key=', key);
     fetch(url)
         .then(result => result.json())
         .then((data) => {
             dropdown.classList.toggle('block')
             sortResults = data.results
-            listItems(data.results)
+            setTimeout(()=>{
+                loader.classList.add('none')
+                listItems(data.results);
+            },1000)
             sessionStorage.setItem("items", JSON.stringify(data.results))
         })
         .catch(function (err) {
@@ -202,13 +221,17 @@ function getPopular(e) {
 }
 
 function getUpcoming(e) {
+    showLoader()
     let url = ''.concat(baseURL, 'movie/upcoming?api_key=', key);
     fetch(url)
         .then(result => result.json())
         .then((data) => {
             dropdown.classList.toggle('block')
             sortResults = data.results
-            listItems(data.results)
+            setTimeout(()=>{
+                loader.classList.add('none')
+                listItems(data.results);
+            },1000)
             sessionStorage.setItem("items", JSON.stringify(data.results))
         })
         .catch(function (err) {
@@ -217,13 +240,17 @@ function getUpcoming(e) {
 }
 
 function getIn(e) {
+    showLoader()
     let url = ''.concat(baseURL, 'movie/now_playing?api_key=', key);
     fetch(url)
         .then(result => result.json())
         .then((data) => {
             dropdown.classList.toggle('block')
             sortResults = data.results
-            listItems(data.results)
+             setTimeout(()=>{
+                loader.classList.add('none')
+                listItems(data.results);
+            },1000)
             sessionStorage.setItem("items", JSON.stringify(data.results))
         })
         .catch(function (err) {
@@ -237,7 +264,7 @@ function movieDetails(e) {
     fetch(url)
         .then(result => result.json())
         .then((data) => {
-            listDetails(data)
+                listDetails(data)
         })
         .catch(function (err) {
             console.log(err);
