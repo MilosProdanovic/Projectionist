@@ -33,6 +33,14 @@ let sortResults = [];
 let clicks = 0;
 let movieId = 0;
 
+function firstLoad() {
+    if(sessionStorage.getItem("firstLoad") !== null){
+        display()
+    }
+}
+
+firstLoad()
+
 //VALIDATON//
 
 function nameValidation(e){
@@ -106,11 +114,11 @@ function subForm(e){
     }
 }
 
-function display (){
-    form.style.display = "none"
-    header.style.display = "block"
-    banner.style.display = "block"
-    container.style.display = "flex"
+function display(){
+    form.classList.add('none')
+    header.classList.add('block')
+    banner.classList.add('block')
+    container.classList.add('flex')
 }
 
 submitForm.addEventListener('click', subForm)
@@ -316,11 +324,8 @@ function sortItems(e){
 
 function listItems(items){
     let values = [];
-    let keys = Object.keys(localStorage)
-    for(let i = 0; i < keys.length; i++){
-        values.push(JSON.parse(localStorage.getItem(keys[i])))
-    }
-    let watchlistId = []
+    let watchlistId = [];
+    addToWatchlist(values)
     for(let i = 0; i < items.length; i++){
         for (let j = 0; j < values.length; j++){
             if(items[i].id === values[j].id){
@@ -329,6 +334,7 @@ function listItems(items){
         }
    }
     container.innerHTML = "";
+    banner.classList.add('block')
     movieSearch.value = "";
     let noMovie = document.createElement('div')
     noMovie.textContent = "No movies"
@@ -461,10 +467,7 @@ function listDetails(details){
     banner.classList = ('none')
     let values = [];
     let watchlistId = []
-    let keys = Object.keys(localStorage)
-    for(let i = 0; i < keys.length; i++){
-        values.push(JSON.parse(localStorage.getItem(keys[i])))
-    }
+    addToWatchlist(values)
     values.map((a)=>{
         watchlistId.push(a.id)
     })
@@ -506,57 +509,27 @@ function listDetails(details){
 
     card.classList.add('cardDetails')
     card.setAttribute('id', details.id)
-    
     card.append(addButton, image)
-
-    details.genres.map((tag)=>{
-        let genres = document.createElement('span')
-        let genresTag = tag.name
-        genres.textContent = genresTag
-        genres.classList.add('genres')
-        card.append(genres)
-    })
-
+    card.append(genres(details.genres,card))
     card.append(title, rating, overview, date, time)
     languagesDiv.append(languagesTag)
-
-    details.spoken_languages.map((tag)=>{
-        let languages = document.createElement('span')
-        let languagesTagName = tag.english_name
-        languages.textContent = " " + languagesTagName + ",";
-        languagesDiv.append(languages)
-    })
-
+    languagesFun(details.spoken_languages, languagesDiv)
     languagesDiv.lastChild.textContent = languagesDiv.lastChild.textContent.slice(0, languagesDiv.lastChild.textContent.length -1)
     card.append(languagesDiv)
     companiesDiv.append(companiesTag)
-
-    details.production_companies.map((tag)=>{
-        let companies = document.createElement('span')
-        let companiesTagName = tag.name
-        companies.textContent = " " + companiesTagName + ",";
-        companiesDiv.append(companies)
-    })
-
+    companiesFun(details.production_companies, companiesDiv)
     companiesDiv.lastChild.textContent = companiesDiv.lastChild.textContent.slice(0, companiesDiv.lastChild.textContent.length -1)
     card.append(companiesDiv)
     countriesDiv.append(countriesTag)
-
-    details.production_countries.map((tag)=>{
-        let countries = document.createElement('span')
-        let countriesTagName = tag.name
-        countries.textContent = " " + countriesTagName + ",";
-        countriesDiv.append(countries)
-    })
+    countriesFun(details.production_countries, countriesDiv)
     countriesDiv.lastChild.textContent = countriesDiv.lastChild.textContent.slice(0, countriesDiv.lastChild.textContent.length -1)
     card.append(countriesDiv)
-    
     container.append(card)
     watchlistId.map((a)=>{
         if(a === details.id){
             addButton.textContent = "x"
             addButton.classList.add('removeMovies')
-            addButton.addEventListener('click',getVideo)
+            addButton.addEventListener('click', getVideo)
             addButton.addEventListener('click', ((e)=>{
                 localStorage.removeItem(details.id);
                 addButton.classList.add('addMovies')
@@ -572,6 +545,50 @@ function listVideo(video){
     trailer.src = "https://www.youtube.com/embed/" + video.results[0].key
     container.append(trailer)
     watchlistNumber()
+}
+
+function addToWatchlist(values){
+    let keys = Object.keys(localStorage)
+    for(let i = 0; i < keys.length; i++){
+        values.push(JSON.parse(localStorage.getItem(keys[i])))
+    }
+}
+
+function genres(genresList,card){
+    genresList.map((tag)=>{
+        let genres = document.createElement('span')
+        let genresTag = tag.name
+        genres.textContent = genresTag
+        genres.classList.add('genres')  
+        card.append(genres)
+    })
+}
+
+function languagesFun(lang, languagesDiv){
+    lang.map((tag)=>{
+        let languages = document.createElement('span')
+        let languagesTagName = tag.english_name
+        languages.textContent = " " + languagesTagName + ",";
+        languagesDiv.append(languages)
+    })
+}
+
+function companiesFun(compa, companiesDiv){
+    compa.map((tag)=>{
+        let companies = document.createElement('span')
+        let companiesTagName = tag.name
+        companies.textContent = " " + companiesTagName + ",";
+        companiesDiv.append(companies)
+    })
+}
+
+function countriesFun(country, countriesDiv){
+    country.map((tag)=>{
+        let countries = document.createElement('span')
+        let countriesTagName = tag.name
+        countries.textContent = " " + countriesTagName + ",";
+        countriesDiv.append(countries)
+    })
 }
 
 function backFun(){
@@ -618,3 +635,5 @@ inCinema.addEventListener('click', getIn)
 sort.addEventListener('click', sortItems)
 watchlist.addEventListener('click', getWatchList)
 back.addEventListener('click', backFun)
+
+sessionStorage.setItem('firstLoad', true)

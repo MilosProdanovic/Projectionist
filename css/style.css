@@ -45,7 +45,7 @@ body {
     border-radius: 20px;
     padding: 20px;
     width: 320px;
-    display: none;
+    display: block;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -131,8 +131,9 @@ nav {
 	height: 60px;
 	position: fixed;
     width: 100%;
-    display: block;
+    display: none;
     z-index: 10;
+    box-shadow: rgb(164 164 195 / 20%) 0px 9px 20px 1px;
 }
  
 .dropdown {
@@ -238,7 +239,7 @@ nav {
     background-repeat: no-repeat;
     background-size: 700px 100%;
     background-position: center;
-    display: block;
+    display: none;
 }
 
 #movie {
@@ -326,7 +327,7 @@ nav {
 
 #container {
     width: 100%;
-    display: flex;
+    display: none;
     justify-content: space-evenly;
     flex-wrap: wrap;
     padding-top: 50px;
