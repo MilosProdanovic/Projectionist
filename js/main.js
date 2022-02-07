@@ -498,6 +498,7 @@ function listDetails(details){
     overview.textContent = 'Movie Info: ' + details.overview;
     date.textContent = 'Release Date: ' + details.release_date
     time.textContent = 'Runtime: ' + details.runtime + " min."
+    
     addButton.classList = 'addMovies'
     addButton.textContent = '+'
     addButton.addEventListener('click', ((e)=>{
@@ -509,22 +510,28 @@ function listDetails(details){
 
     card.classList.add('cardDetails')
     card.setAttribute('id', details.id)
+   
     card.append(addButton, image)
     card.append(genres(details.genres,card))
     card.append(title, rating, overview, date, time)
+   
     languagesDiv.append(languagesTag)
     languagesFun(details.spoken_languages, languagesDiv)
     languagesDiv.lastChild.textContent = languagesDiv.lastChild.textContent.slice(0, languagesDiv.lastChild.textContent.length -1)
     card.append(languagesDiv)
+    
     companiesDiv.append(companiesTag)
     companiesFun(details.production_companies, companiesDiv)
     companiesDiv.lastChild.textContent = companiesDiv.lastChild.textContent.slice(0, companiesDiv.lastChild.textContent.length -1)
     card.append(companiesDiv)
+   
     countriesDiv.append(countriesTag)
     countriesFun(details.production_countries, countriesDiv)
     countriesDiv.lastChild.textContent = countriesDiv.lastChild.textContent.slice(0, countriesDiv.lastChild.textContent.length -1)
     card.append(countriesDiv)
+   
     container.append(card)
+    
     watchlistId.map((a)=>{
         if(a === details.id){
             addButton.textContent = "x"
@@ -618,9 +625,6 @@ watchlistNumber()
 
 document.addEventListener('DOMContentLoaded', getConfig);
 document.addEventListener('DOMContentLoaded', getToken)
-document.addEventListener('DOMContentLoaded', ((e)=>{
-    sessionStorage.removeItem('items')
-}))
 banner.addEventListener('mouseover', check)
 button.addEventListener('click',runSearch)
 banner.addEventListener('keyup', ((e)=>{

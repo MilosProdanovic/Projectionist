@@ -219,8 +219,17 @@ nav {
     cursor: unset;
 }
 
-#logo img {
-    width: 40px;
+#logo img{
+    width: 50px;
+    height: 100%;
+    padding: 8px;
+    margin-left: 5px;
+}
+
+#logo img:hover{
+    background-color: #15172b;
+    transition: .9s; 
+    cursor: pointer;
 }
 
 #subtitle {
@@ -234,7 +243,7 @@ nav {
 
 #banner {
     width: 100%;
-    height: 300px;
+    height: 330px;
     background-image: url("../img/projektor.jpg");
     background-repeat: no-repeat;
     background-size: 700px 100%;
