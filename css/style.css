@@ -40,7 +40,7 @@ body {
 
 /* FORM */
 
-.form {
+#form {
     background-color: #15172b;
     border-radius: 20px;
     padding: 20px;
