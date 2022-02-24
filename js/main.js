@@ -483,8 +483,13 @@ function listDetails(details) {
     let addButton = document.createElement('button')
     ham.classList.add('none')
     back.classList.remove('none')
-
-    image.src = baseImageURL + poster2 + details.poster_path;
+    if (details.poster_path === null) {
+        image.src = "img/err.png"
+        image.style.width = "342px"
+        image.style.height = "513px"
+    } else {
+        image.src = baseImageURL + poster2 + details.poster_path;
+    }
     title.textContent = details.title;
     title.classList.add('detailTitle')
     rating.textContent = 'Rating: ' + details.vote_average;
@@ -541,6 +546,7 @@ function listDetails(details) {
 }
 
 function listVideo(video) {
+    console.log(video)
     let trailer = document.createElement('iframe')
     trailer.src = "https://www.youtube.com/embed/" + video.results[0].key
     container.append(trailer)
