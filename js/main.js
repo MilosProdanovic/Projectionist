@@ -187,8 +187,8 @@ function runSearch(e) {
 }
 
 function getTopRated(e) {
+    clicks = 0
     showLoader()
-    clicks = 1;
     let url = ''.concat(baseURL, 'movie/top_rated?api_key=', key);
     fetch(url)
         .then(result => result.json())
@@ -207,6 +207,7 @@ function getTopRated(e) {
 }
 
 function getPopular(e) {
+    clicks = 0
     showLoader()
     let url = ''.concat(baseURL, 'movie/popular?api_key=', key);
     fetch(url)
@@ -226,6 +227,7 @@ function getPopular(e) {
 }
 
 function getUpcoming(e) {
+    clicks = 0
     showLoader()
     let url = ''.concat(baseURL, 'movie/upcoming?api_key=', key);
     fetch(url)
@@ -245,6 +247,7 @@ function getUpcoming(e) {
 }
 
 function getIn(e) {
+    clicks = 0
     showLoader()
     let url = ''.concat(baseURL, 'movie/now_playing?api_key=', key);
     fetch(url)
@@ -318,6 +321,7 @@ function sortItems(e) {
 }
 
 function listItems(items) {
+    clicks = 0
     let values = [];
     let watchlistId = [];
     addToWatchlist(values)
@@ -399,6 +403,7 @@ function listItems(items) {
             stars.classList.remove('flex')
         }))
         starRating(card)
+        clicks += 1
     }
 }
 
@@ -546,7 +551,6 @@ function listDetails(details) {
 }
 
 function listVideo(video) {
-    console.log(video)
     let trailer = document.createElement('iframe')
     trailer.src = "https://www.youtube.com/embed/" + video.results[0].key
     container.append(trailer)
@@ -611,7 +615,6 @@ function backFun() {
 
 function watchlistNumber() {
     let num = document.querySelector('#movieNumber')
-
     num.innerText = localStorage.length
     if (localStorage.length === 0) {
         num.innerText = ""
