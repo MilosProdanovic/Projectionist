@@ -187,7 +187,6 @@ function runSearch(e) {
 }
 
 function getTopRated(e) {
-    clicks = 0
     showLoader()
     let url = ''.concat(baseURL, 'movie/top_rated?api_key=', key);
     fetch(url)
@@ -207,7 +206,6 @@ function getTopRated(e) {
 }
 
 function getPopular(e) {
-    clicks = 0
     showLoader()
     let url = ''.concat(baseURL, 'movie/popular?api_key=', key);
     fetch(url)
@@ -227,7 +225,6 @@ function getPopular(e) {
 }
 
 function getUpcoming(e) {
-    clicks = 0
     showLoader()
     let url = ''.concat(baseURL, 'movie/upcoming?api_key=', key);
     fetch(url)
@@ -247,7 +244,6 @@ function getUpcoming(e) {
 }
 
 function getIn(e) {
-    clicks = 0
     showLoader()
     let url = ''.concat(baseURL, 'movie/now_playing?api_key=', key);
     fetch(url)
@@ -315,13 +311,13 @@ function sortItems(e) {
             return a.vote_average - b.vote_average
         })
     }
-    clicks += 1
+    
     sessionStorage.setItem("items", JSON.stringify(sortResults))
     listItems(sortResults)
+    clicks += 1
 }
 
 function listItems(items) {
-    clicks = 0
     let values = [];
     let watchlistId = [];
     addToWatchlist(values)
@@ -403,7 +399,6 @@ function listItems(items) {
             stars.classList.remove('flex')
         }))
         starRating(card)
-        clicks += 1
     }
 }
 
